@@ -314,14 +314,16 @@ class TwitterAPIExchange
 
         $this->httpStatusCode = curl_getinfo($feed, CURLINFO_HTTP_CODE);
 
-        if (($error = curl_error($feed)) !== '')
-        {
-            curl_close($feed);
-
-            throw new \Exception($error);
+        $error = false;
+        if ($json === false) {
+          $error = curl_error($feed);
         }
 
         curl_close($feed);
+
+        if ($error !== false) {
+          throw new \Exception($error);
+        }
 
         return $json;
     }
